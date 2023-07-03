@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head> 
+    <link rel="stylesheet" href="style.css" />
+    <script defer type="module" src="./Main.js"></script>
+  <body>
+    <div id="titleCon"hidden>
+      <h1 id="title">Powerlifting Tracker</h1>
+    </div>
+    
+    <div id="LogInContainer"hidden>
+      <div class="Objects"><input id="UserNameInput" placeholder="Username"></div>
+      <div class="Objects"><input type="password" id="PasswordInput1" placeholder="Password"></div>
+      <div class="Objects"id="PasswordInput2Con"hidden><input type="password" id="PasswordInput2" placeholder="Confirm Password" ></div>
+      <div class="Objects"id="LoginButtonFinCon"><button id="LoginButtonFin">Log In</div>
+        <div class="Objects"id="CreateAcoountFinCon"hidden><button id="CreateAcoountFin" >Create Account</div>
+      <div class="Objects"id="CreateAccountINCon"><h2 id="CreateAccountIN" >Create Account</h2></div>
+      <div class="Objects"id="LogInINCon"hidden><h2 id="LogInIN" >Log in</h2></div>
+      <div class="Objects"id="ErorrSuccessMessageCon" hidden><h2 id="ErorrSuccessMessage" >CREATION FAILED PLEASE ENTER SAME PASSWORDS</h2></div>
+    </div>
+    <div id="Dashboard">
+     <div id="AccountInformationCon" class="DashboardBoxes">
+      <div ><h1>Greetings, foxhopper</h1></div>
+     </div>
+     <div id="CurrentTotalMaxesCon"class="DashboardBoxes">
+      <div ><h3 id="CurrentStatsTitle">Current Stats</h3></div>
+      <div><h3 id="CurrentTotal">Total: 560</h3></div>
+      <div><h3 id="CurrentSBD">Squat: 130 Bench: 100 Deadlift: 300</h3></div>
+     </div>
+     <div id="InputContainer"class="DashboardBoxes"><button class="DashboardSelectorButtonSel  AddPrButton">Add Pr's</button><button class="DashboardSelectorButtonUnSel  AddGoalButton">Update Goal's</button><button class="DashboardSelectorButtonUnSel  AccountSettingsButton">Account Settings</button><div id="AddPrContent"><select id="AddPrLiftSelector"><option>Squat</option><option>Bench</option><option>Deadlift</option></select><input type="date" id="AddPrDateSelector"><input placeholder="Amount" id="AddPrAmountInput"><select id="AddPrRepSelecor"><option>Reps</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select><input placeholder="Comment on lift (optional)" id="AddPrCommentInput"><button id="AddPrFinalSubmitButton">Submit</button></div>
+     <div id="UpdateGoalsContent"hidden><select id="UpdateGoalsLiftSelector"><option>Squat</option><option>Bench</option><option>Deadlift</option></select><input type="date"id="UpdateGoalsDateSelector"><input id="UpdateGoalsAmountInput"placeholder="Amount"><input id="UpdateGoalsCommentInput"placeholder="Comment on goal (optional)"><button id="UpdateGoalsFinalSubmitButton">Submit</button></div>
+     <div id="AccountSettingsContent"hidden><input placeholder="New Password" id="AccountSettingsPassInput"type="password"><input placeholder="New Password Confirm" id="AccountSettingsPassInputConfirm"type="password"><button id="AccountSettingsChangePassword">Change Password</button><button id="AccountSettingsLogOutButton">Log Out</button><button id="AccountSettingsDeleteAccountButton">Delete Account</button></div>
+    </div>
+     <div id="Box3"class="DashboardBoxes">Total Weight lifted pointed graph</div>
+     <div id="MainGraphCon"class="DashboardBoxes"><canvas id="LineGraph"></canvas></div>
+     <div id="MinorGraphCon"class="DashboardBoxes"><canvas id="DonghnutGraphS"style="display: inline"></canvas><canvas id="DonghnutGraphB"style="display: inline"></canvas><canvas id="DonghnutGraphD"style="display: inline"></canvas></div>
+    </div>
+    </div>
+  </body>
+</html>

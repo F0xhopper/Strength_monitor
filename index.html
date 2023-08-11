@@ -37,16 +37,38 @@
      <div id="UpdateGoalsContent"hidden><select id="UpdateGoalsLiftSelector"><option>Squat</option><option>Bench</option><option>Deadlift</option></select><input type="date"id="UpdateGoalsDateSelector"><input id="UpdateGoalsAmountInput"placeholder="Amount (kg)"><input id="UpdateGoalsCommentInput"placeholder="Comment on goal (optional)"><button id="UpdateGoalsFinalSubmitButton">Submit</button></div>
      <div id="AccountSettingsContent"hidden><input placeholder="New Password" id="AccountSettingsPassInput"type="password"><input placeholder="New Password Confirm" id="AccountSettingsPassInputConfirm"type="password"><div id="AccountSettingsErrorMessage"hidden>Please Match Passwords</div><button id="AccountSettingsChangePassword">Change Password</button><button id="AccountSettingsLogOutButton">Log Out</button><button id="AccountSettingsDeleteAccountButton">Delete Account</button></div>
     </div>
-     <div id="CoolStatsCon"class="DashboardBoxes"><div id ="totalWeightLifted"><h3>Total Weight ever lifted</h3><h2>300kg</h2></div><div id ="totalWeightLifted"><h3>Weeks PR'd in a row</h3><h2>5</h2></div><div id ="totalWeightLifted"><h3>Days to hit your next goal</h3><h2>14</h2></div><div id ="totalWeightLifted"><h3>Total Weight ever lifted</h3><h2>300kg</h2></div></div>
-     <div id="TrajectCon"class="DashboardBoxes"><h3 id="CurrTrajTitle">Your Current Trajectory</h3>
-<div><canvas id="TrajectGraph"></canvas></div>
+     <div id="CoolStatsCon"class="DashboardBoxes"></div>
+     <div id="LeaderboardTableCon"class="DashboardBoxes">
+      <h3 id="LeaderBoardTitle">Where you sit on leaderboard</h3><table id="LeaderBoardTable">
+      <thead>
+        <tr >
+          <th>Username</th>
+          <th>Squat</th>
+          <th>bench</th>
+          <th>Deadlift</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="tabledata"></tbody>
+    </table>
      </div>
-     <div id="MainGraphCon"class="DashboardBoxes"><button class='MainSelected BenchButtonMain'>Bench</button><button class='MainUnSelected SquatButtonMain'>Squat</button><button class='MainUnSelected DeadliftButtonMain'>Deadlift</button><canvas id="LineGraph"></canvas></div>
+     <div id="MainGraphCon"class="DashboardBoxes"><button class='MainUnSelected SquatButtonMain'>Squat</button><button class='MainSelected BenchButtonMain'>Bench</button><button class='MainUnSelected DeadliftButtonMain'>Deadlift</button><canvas id="LineGraph"></canvas></div>
      <div id="MinorGraphCon"class="DashboardBoxes"><h3 id="HowCloseTitle">How close to current goal's</h3><canvas id="DonghnutGraphS"style="display: inline"></canvas><canvas id="DonghnutGraphB"style="display: inline"></canvas><canvas id="DonghnutGraphD"style="display: inline"></canvas></div>
+     <div id="BlurBox" hidden>
+
+      
+     </div>
+      <div id="NewAccountUpdatePopUp"hidden >
+    <h1 id="NewAccountTitle">Add Goals For New Account</h1>
+    <h3 class="NewAccountMiniTitles">Squat</h3>
+    <input type="date"id="NewAccountDateSelectorSqaut"><input id="NewAccountAmountInputSqaut"placeholder="Amount (kg)"><input id="NewAccountCommentInputSqaut"placeholder="Comment on goal (optional)">
+    <h3 class="NewAccountMiniTitles">Bench</h3>
+    <input type="date"id="NewAccountDateSelectorBench"><input id="NewAccountAmountInputBench"placeholder="Amount (kg)"><input id="NewAccountCommentInputBench"placeholder="Comment on goal (optional)">
+    <h3 class="NewAccountMiniTitles">Deadlift</h3>
+    <input type="date"id="NewAccountDateSelectorDeadlift"><input id="NewAccountAmountInputDeadlift"placeholder="Amount (kg)"><input id="NewAccountCommentInputDeadlift"placeholder="Comment on goal (optional)"> <h3 id="NewAccountErrorMessage"hidden>Please fill all inputs</h3><button id="NewAccountFinalSubmitButton">Submit</button>
+    
     </div>
-    <div id="CommentPopUp" hidden>
-    Birthday PR
-    </div>
+   
     </div>
   </body>
 </html>

@@ -1,11 +1,11 @@
 import Chart from "chart.js/auto";
-import mysql from "mysql2";
+import annotationPlugin from "chartjs-plugin-annotation";
+Chart.register(annotationPlugin);
 
 const UsernameInput = document.querySelector("#UserNameInput");
 const PasswordInput1 = document.querySelector("#PasswordInput1");
 const PasswordInput2 = document.querySelector("#PasswordInput2");
 const PasswordInput2Con = document.querySelector("#PasswordInput2Con");
-const LoginButton = document.querySelector("#LoginButton");
 const CreateAccountButtonINCon = document.querySelector("#CreateAccountINCon");
 const CreateAccountButtonFinCon = document.querySelector(
   "#CreateAcoountFinCon"
@@ -35,9 +35,7 @@ const AllMainButtonSelectors = document.querySelectorAll(
 );
 const CurrentTotal = document.querySelector("#CurrentTotal");
 const CurrentSBD = document.querySelector("#CurrentSBD");
-const CurrentGoalsSquat = document.querySelector("#CurrentGoalsSquat");
-const CurrentGoalsBench = document.querySelector("#CurrentGoalsBench");
-const CurrentGoalDeadlift = document.querySelector("#CurrentGoalsDeadlift ");
+
 const AddPrsSelectorButton = document.querySelector(".AddPrButton");
 const AddGoalsSelectorButton = document.querySelector(".AddGoalButton");
 const AccountsSettingsSelectorButton = document.querySelector(
@@ -83,6 +81,45 @@ const ChangePasswordError = document.querySelector(
 const DeleteAccountButton = document.querySelector(
   "#AccountSettingsDeleteAccountButton"
 );
+const NewAccountPopUp = document.querySelector("#NewAccountUpdatePopUp");
+const NewAccountDateSqaut = document.querySelector(
+  "#NewAccountDateSelectorSqaut"
+);
+const NewAccountDateBench = document.querySelector(
+  "#NewAccountDateSelectorBench"
+);
+
+const NewAccountDateDeadlift = document.querySelector(
+  "#NewAccountDateSelectorDeadlift"
+);
+const NewAccountAmountSqaut = document.querySelector(
+  "#NewAccountAmountInputSqaut"
+);
+const NewAccountAmountBench = document.querySelector(
+  "#NewAccountAmountInputBench"
+);
+const NewAccountAmountDeadlift = document.querySelector(
+  "#NewAccountAmountInputDeadlift"
+);
+const NewAccountCommentSqaut = document.querySelector(
+  "#NewAccountCommentInputSqaut"
+);
+const NewAccountCommentBench = document.querySelector(
+  "#NewAccountCommentInputBench"
+);
+const NewAccountCommentDeadlift = document.querySelector(
+  "#NewAccountCommentInputDeadlift"
+);
+const NewAccountFinalSubmitButton = document.querySelector(
+  "#NewAccountFinalSubmitButton"
+);
+
+const NewAccountErrorMessage = document.querySelector(
+  "#NewAccountErrorMessage"
+);
+const BlurBox = document.querySelector("#BlurBox");
+const tabledata = document.querySelector("#tabledata");
+
 //General//
 function ClearingInputField(inputobject) {
   inputobject.value = "";
@@ -115,7 +152,7 @@ function InitiatingLogInUI() {
 }
 
 // Accounts//
-
+let arrayofaccountobjects = [];
 let loggedInAccountObject;
 class Accounts {
   constructor(username, password) {
@@ -172,7 +209,7 @@ function createAccount() {
       UsernameInput.value,
       JSON.stringify(new Accounts(UsernameInput.value, PasswordInput1.value))
     );
-    console.log(localStorage);
+
     ClearingInputField(UsernameInput);
     ClearingInputField(PasswordInput1);
     ClearingInputField(PasswordInput2);
@@ -219,6 +256,16 @@ function SortingLiftsByDateInLoggedInObject() {
     (a, b) => new Date(a.Date) - new Date(b.Date)
   );
 }
+
+function UpdatingArrayOfAllAccountObjects() {
+  let arrayofkeys = Object.keys(localStorage);
+  arrayofkeys.forEach((key) => {
+    if (key !== "debug") {
+      arrayofaccountobjects.push(JSON.parse(localStorage.getItem(key)));
+    }
+  });
+  console.log(arrayofaccountobjects);
+}
 function ChangingPasswwordLoggedIn() {
   if (ChangingPassword.value == ChangingPasswordConfirm.value) {
     loggedInAccountObject.password = ChangingPassword;
@@ -231,7 +278,21 @@ function ChangingPasswwordLoggedIn() {
 }
 
 //Loading On Log In dashboardUI / Logging Out UI
-
+function MakeUpdateAccountPopUpIfEmpty() {
+  NewAccountDateSqaut.value = "";
+  NewAccountDateBench.value = "";
+  NewAccountDateDeadlift.value = "";
+  NewAccountAmountSqaut.value = "";
+  NewAccountAmountBench.value = "";
+  NewAccountAmountDeadlift.value = "";
+  NewAccountCommentSqaut.value = "";
+  NewAccountCommentBench.value = "";
+  NewAccountCommentDeadlift.value = "";
+  if (loggedInAccountObject.Bench.goal.weight == undefined) {
+    revealEl(BlurBox);
+    revealEl(NewAccountPopUp);
+  }
+}
 function LoadingDashboard() {
   hideEl(WholeLogInContainer);
   hideEl(LogInTitleCon);
@@ -256,19 +317,105 @@ function HeighestWEightOfArray(Array) {
     return highestAmount;
   }
 }
-function UpdatingHowCloseToCurrentMaxes() {}
+function CalcutlatingAmountLeftToHitGoal(Lift) {
+  if (
+    loggedInAccountObject[Lift].goal.weight -
+      HeighestWEightOfArray(loggedInAccountObject[Lift].Lifts) <
+    0
+  ) {
+    return 0;
+  } else {
+    return (
+      loggedInAccountObject[Lift].goal.weight -
+      HeighestWEightOfArray(loggedInAccountObject[Lift].Lifts)
+    );
+  }
+}
+function UpdatingHowCloseToCurrentMaxes() {
+  DonghnutSqaut.data = {
+    labels: ["Current Squat Max", "Left To Reach Goal"],
+    datasets: [
+      {
+        label: "online tutorial subjects",
+        data: [
+          HeighestWEightOfArray(loggedInAccountObject.Squat.Lifts),
+          CalcutlatingAmountLeftToHitGoal("Squat"),
+        ],
+        backgroundColor: ["black", "grey"],
+        hoverOffset: 5,
+      },
+    ],
+  };
+
+  DonghnutBench.data = {
+    labels: ["Current Bench Max", "Left To Reach Goal"],
+    datasets: [
+      {
+        label: "online tutorial subjects",
+        data: [
+          HeighestWEightOfArray(loggedInAccountObject.Bench.Lifts),
+          CalcutlatingAmountLeftToHitGoal("Bench"),
+        ],
+        backgroundColor: ["black", "grey"],
+        hoverOffset: 5,
+      },
+    ],
+  };
+  DonghnutDeadlift.data = {
+    labels: ["Current Deadlift Max", "Left To Reach Goal"],
+    datasets: [
+      {
+        label: "online tutorial subjects",
+        data: [
+          HeighestWEightOfArray(loggedInAccountObject.Deadlift.Lifts),
+          CalcutlatingAmountLeftToHitGoal("Deadlift"),
+        ],
+        backgroundColor: ["black", "grey"],
+        hoverOffset: 5,
+      },
+    ],
+  };
+  DonghnutSqaut.update();
+  DonghnutBench.update();
+  DonghnutDeadlift.update();
+}
+function UpdatingTableDate(tabledata) {
+  let dataHtml = "";
+  for (let user of tabledata) {
+    dataHtml += `<tr><td>${setObject}`;
+  }
+}
 function UpdatingMainGraph() {
   if (MainButtonSelectBench.classList.contains("MainSelected")) {
     MainGrpah.data = {
       labels: loggedInAccountObject.Bench.Lifts.map((a) => a.Date),
       datasets: [
         {
-          label: "Bench",
+          label: "Pr's",
           backgroundColor: "black",
           data: loggedInAccountObject.Bench.Lifts.map((a) => a.Amount),
           borderWidth: 1,
         },
+        {
+          label: "Goal",
+          backgroundColor: "lightgreen",
+        },
       ],
+    };
+    MainGrpah.options = {
+      plugins: {
+        annotation: {
+          annotations: {
+            line1: {
+              type: "line",
+              yMin: loggedInAccountObject.Bench.goal.weight,
+              yMax: loggedInAccountObject.Bench.goal.weight,
+              borderColor: "lightgreen",
+              borderWidth: 2,
+            },
+          },
+        },
+      },
     };
   }
   if (MainButtonSelectDeadlift.classList.contains("MainSelected")) {
@@ -281,7 +428,26 @@ function UpdatingMainGraph() {
           data: loggedInAccountObject.Deadlift.Lifts.map((a) => a.Amount),
           borderWidth: 1,
         },
+        {
+          label: "Goal",
+          backgroundColor: "lightgreen",
+        },
       ],
+    };
+    MainGrpah.options = {
+      plugins: {
+        annotation: {
+          annotations: {
+            line1: {
+              type: "line",
+              yMin: loggedInAccountObject.Deadlift.goal.weight,
+              yMax: loggedInAccountObject.Deadlift.goal.weight,
+              borderColor: "lightgreen",
+              borderWidth: 2,
+            },
+          },
+        },
+      },
     };
   }
   if (MainButtonSelectSquat.classList.contains("MainSelected")) {
@@ -294,7 +460,26 @@ function UpdatingMainGraph() {
           data: loggedInAccountObject.Squat.Lifts.map((a) => a.Amount),
           borderWidth: 1,
         },
+        {
+          label: "Goal",
+          backgroundColor: "lightgreen",
+        },
       ],
+    };
+    MainGrpah.options = {
+      plugins: {
+        annotation: {
+          annotations: {
+            line1: {
+              type: "line",
+              yMin: loggedInAccountObject.Squat.goal.weight,
+              yMax: loggedInAccountObject.Squat.goal.weight,
+              borderColor: "lightgreen",
+              borderWidth: 2,
+            },
+          },
+        },
+      },
     };
   }
   MainGrpah.update();
@@ -326,7 +511,7 @@ function UpdateGoalReusedFunction(Lift) {
     );
   } else {
     ChangeTextOfElement(
-      `Sqaut: ${loggedInAccountObject[Lift].goal.weight} by ${loggedInAccountObject[Lift].goal.date} *
+      `${Lift}: ${loggedInAccountObject[Lift].goal.weight} by ${loggedInAccountObject[Lift].goal.date} *
   `,
       document.querySelector(`#CurrentGoals${Lift}`)
     );
@@ -343,6 +528,7 @@ function UpdateAllDashboardUI() {
   ChangingCurrentStats();
   UpdatingGoals();
   UpdatingMainGraph();
+  UpdatingHowCloseToCurrentMaxes();
 }
 //Adding Pr's, updating goal and Account Settings UI and Funtions
 
@@ -422,9 +608,47 @@ function ChangingMaingraphContent(event) {
   }
 }
 
+function NewAccountUpdatingAccount() {
+  if (
+    NewAccountDateSqaut.value &&
+    NewAccountDateBench.value &&
+    NewAccountDateDeadlift.value &&
+    NewAccountAmountSqaut.value &&
+    NewAccountAmountBench.value &&
+    NewAccountAmountDeadlift.value &&
+    NewAccountCommentSqaut.value &&
+    NewAccountCommentBench.value &&
+    NewAccountCommentDeadlift.value != ""
+  ) {
+    loggedInAccountObject.Squat.goal.weight = NewAccountAmountSqaut.value;
+    loggedInAccountObject.Squat.goal.date = NewAccountDateSqaut.value;
+    loggedInAccountObject.Squat.goal.comment = NewAccountCommentSqaut.value;
+    loggedInAccountObject.Bench.goal.weight = NewAccountAmountBench.value;
+    loggedInAccountObject.Bench.goal.date = NewAccountDateBench.value;
+    loggedInAccountObject.Bench.goal.comment = NewAccountCommentBench.value;
+    loggedInAccountObject.Deadlift.goal.weight = NewAccountAmountDeadlift.value;
+    loggedInAccountObject.Deadlift.goal.date = NewAccountDateDeadlift.value;
+    loggedInAccountObject.Deadlift.goal.comment =
+      NewAccountCommentDeadlift.value;
+    hideEl(NewAccountPopUp);
+    hideEl(BlurBox);
+  } else {
+    revealEl(NewAccountErrorMessage);
+    NewAccountDateSqaut.value = "";
+    NewAccountDateBench.value = "";
+    NewAccountDateDeadlift.value = "";
+    NewAccountAmountSqaut.value = "";
+    NewAccountAmountBench.value = "";
+    NewAccountAmountDeadlift.value = "";
+    NewAccountCommentSqaut.value = "";
+    NewAccountCommentBench.value = "";
+    NewAccountCommentDeadlift.value = "";
+  }
+}
+
 function AddPrToLoggedInAccountReUSedFunction(Lift) {
   if (AddPrDropdown.value == Lift) {
-    if (AddPrRepDropdown.value !== "Reps") {
+    if (AddPrRepDropdown.value != "Reps") {
       let calculatedPr = Math.round(
         AddPrWeight.value / (1.0278 - 0.0278 * Number(AddPrRepDropdown.value))
       );
@@ -510,24 +734,25 @@ const MainGrpah = new Chart(LineGraph, {
     },
   },
 });
-new Chart(DonghnutGraph1, {
+const DonghnutSqaut = new Chart(DonghnutGraph1, {
   type: "doughnut",
   data: {
-    labels: ["current max", "max goal"],
+    labels: ["How Far Away From Squat Goal"],
     datasets: [
       {
         label: "online tutorial subjects",
         data: [180, 10],
-        backgroundColor: ["black", "white"],
+        backgroundColor: ["black", " lightgrey"],
         hoverOffset: 5,
       },
     ],
   },
   options: {
     responsive: false,
+    events: null,
   },
 });
-new Chart(DonghnutGraph2, {
+const DonghnutBench = new Chart(DonghnutGraph2, {
   type: "doughnut",
   data: {
     labels: ["current max", "max goal"],
@@ -535,7 +760,7 @@ new Chart(DonghnutGraph2, {
       {
         label: "online tutorial subjects",
         data: [180, 3],
-        backgroundColor: ["black", "white"],
+        backgroundColor: ["black", "lightgrey"],
         hoverOffset: 5,
       },
     ],
@@ -544,7 +769,7 @@ new Chart(DonghnutGraph2, {
     responsive: false,
   },
 });
-new Chart(DonghnutGraph3, {
+const DonghnutDeadlift = new Chart(DonghnutGraph3, {
   type: "doughnut",
   data: {
     labels: ["current max", "max goal"],
@@ -552,42 +777,13 @@ new Chart(DonghnutGraph3, {
       {
         label: "online tutorial subjects",
         data: [120, 50],
-        backgroundColor: ["black", "white"],
+        backgroundColor: ["black", "lightgrey"],
         hoverOffset: 5,
       },
     ],
   },
   options: {
     responsive: false,
-  },
-});
-new Chart(TrajectGraph, {
-  type: "line",
-  data: {
-    labels: [
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
-    datasets: [
-      {
-        label: "Current PR's",
-        data: [52, 65, 77, 81],
-        borderColor: "black",
-        tension: 0.1,
-      },
-      {
-        label: "trajectory",
-        data: [52, 65, 77, 81, 90, 100, 110, 120],
-        borderColor: "grey",
-        tension: 0.1,
-      },
-    ],
   },
 });
 
@@ -599,6 +795,8 @@ const init = function () {
     LoggingIn();
     SortingLiftsByDateInLoggedInObject();
     UpdateAllDashboardUI();
+    MakeUpdateAccountPopUpIfEmpty();
+    UpdatingArrayOfAllAccountObjects();
   });
   AllDashBoardSelectorButtons.forEach((element) =>
     element.addEventListener("click", ChangingContainerContent)
@@ -623,6 +821,11 @@ const init = function () {
   DeleteAccountButton.addEventListener("click", () => {
     DeletingAccount();
     LoggingOut();
+  });
+  NewAccountFinalSubmitButton.addEventListener("click", () => {
+    NewAccountUpdatingAccount();
+    UpdateAllDashboardUI();
+    UpdatingLoggedInAccountValuesToLocalStorage();
   });
 };
 init();

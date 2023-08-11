@@ -81,18 +81,27 @@ body {
   margin-bottom: 0px;
   margin-left: 83px;
 }
-#CommentPopUp {
-  color: aliceblue;
-  position: absolute;
-  top: 186px;
-  left: 710px;
-  width: max-content;
-  border: #000 1px solid;
-  border-radius: 5px;
-  background: #000000;
+#NewAccountErrorMessage {
+  margin: 10px;
+  margin-left: 268px;
+}
+#NewAccountUpdatePopUp {
+  grid-row: 2/8;
+  grid-column: 3 / 10;
+  color: rgb(0, 0, 0);
+  border-radius: 8px;
+  background: #ffffff;
   padding: 10px;
-  z-index: 1000000;
-  display: inline;
+  backdrop-filter: blur(5px);
+  font-size: 14;
+}
+#BlurBox {
+  grid-row: 1/9;
+  grid-column: 1 / 12;
+  color: rgb(0, 0, 0);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
   font-size: 14;
 }
 #CurrentTotal {
@@ -114,16 +123,20 @@ body {
   margin-bottom: 0px;
   margin-left: 190px;
 }
-#CurrTrajTitle {
-  padding-left: 150px;
+#LeaderBoardTitle {
   margin-top: 0px;
-  margin-bottom: 12px;
+  margin-left: 130px;
 }
-#TrajectCon {
+#LeaderboardTableCon {
   font-size: 14px;
   padding: 10px;
   grid-row: 6 / 9;
   grid-column: 7 / 12;
+}
+#LeaderBoardTable {
+  border: 1px solid;
+  width: 100%;
+  height: 240px;
 }
 #MainGraphCon {
   grid-row: 2 / 6;
@@ -142,6 +155,14 @@ body {
 #AccountSettingsContent {
   padding: 10px;
 }
+table {
+  border-collapse: collapse;
+}
+td,
+th {
+  border: 1px solid;
+}
+
 .DashboardBoxes {
   background-color: white;
   border-radius: 8px;
@@ -253,7 +274,6 @@ body {
   border-radius: 2px;
   color: white;
   margin: 10px;
-
   cursor: pointer;
   width: 389px;
 }
@@ -340,4 +360,48 @@ body {
   width: 389px;
   margin: 10px;
   cursor: pointer;
+}
+#NewAccountDateSelectorSqaut,
+#NewAccountDateSelectorBench,
+#NewAccountDateSelectorDeadlift,
+#NewAccountAmountInputSqaut,
+#NewAccountAmountInputBench,
+#NewAccountAmountInputDeadlift {
+  margin: 10px;
+  height: 30px;
+  width: 343px;
+}
+
+#NewAccountCommentInputSqaut,
+#NewAccountCommentInputBench,
+#NewAccountCommentInputDeadlift {
+  margin: 10px;
+  height: 30px;
+  width: 709px;
+}
+
+#NewAccountFinalSubmitButton {
+  background-color: black;
+  border-radius: 2px;
+  color: white;
+  margin: 10px;
+  height: 39px;
+  width: 719px;
+  font-size: 15px;
+  cursor: pointer;
+}
+#NewAccountFinalSubmitButton:hover {
+  background-color: rgb(255, 255, 255);
+  border-radius: 2px;
+  color: rgb(0, 0, 0);
+  margin: 10px;
+  font-size: 15px;
+  height: 39px;
+  width: 719px;
+}
+.NewAccountMiniTitles {
+  margin-left: 10px;
+}
+#NewAccountTitle {
+  margin-left: 170px;
 }

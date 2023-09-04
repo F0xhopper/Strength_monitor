@@ -5,7 +5,8 @@
     <script defer type="module" src="./Main.js"></script>
   <body>
     <div id="titleCon">
-      <h1 id="title">Powerlifting Tracker</h1>
+      <h1 id="title">Strength Monitor</h1>
+
     </div>
     
     <div id="LogInContainer">
@@ -17,10 +18,12 @@
       <div class="Objects"id="CreateAccountINCon"><h2 id="CreateAccountIN" >Create Account</h2></div>
       <div class="Objects"id="LogInINCon"hidden><h2 id="LogInIN" >Log in</h2></div>
       <div class="Objects"id="ErorrSuccessMessageCon" hidden><h2 id="ErorrSuccessMessage" >CREATION FAILED PLEASE ENTER SAME PASSWORDS</h2></div>
-    </div>
+    </div><div id="maindashcon"hidden>
     <div id="Dashboard" >
-     <div id="AccountInformationCon" class="DashboardBoxes">
-      <div ><h1 id="GreetingsMessage">Greetings, Foxhopper</h1></div>
+     <div id="AccountInformationCon" class="DashboardBoxes"><div><img id="AccountIcon" src='User-Account-Person-PNG-Photos.png'></div>
+      <div ><h1 id="GreetingsMessageUsername">Username:</h1><h1 id="GreetingsMessageUsername2">popo</h1><h1 id="GreetingsMessageAge">Account Rank:
+      </h1><h1 id="GreetingsMessageAge2">100
+      </h1></div>
      </div>
      <div id="CurrentTotalMaxesCon"class="DashboardBoxes">
       <div ><h3 id="CurrentStatsTitle">Current Stats</h3></div>
@@ -29,36 +32,49 @@
      </div>
      <div id='CurrentGoalsContainer'class="DashboardBoxes">
       <div><h3 id='CurrentGoalsTitle'>Current Goals</h3></div>
-      <div><h3 id='CurrentGoalsSquat'>Sqaut: 120 by 15/0/23 *</h3></div>
-      <div><h3 id='CurrentGoalsBench'>Bench: 100 by 13/0/23 *</h3></div>
-      <div><h3 id='CurrentGoalsDeadlift'>Deadlift: 200 by 13/0/23 *</h3></div>
+      <div id="CurrentgoalSquatCon"><h3 id='CurrentGoalsSquat'class='SqautGoal'>Sqaut: 120 by 15/0/23 *</h3></div>
+      <div><h3 id='CurrentGoalsBench'class='BenchGoal'>Bench: 100 by 13/0/23 *</h3></div>
+      <div><h3 id='CurrentGoalsDeadlift'class='DeadliftGoal'>Deadlift: 200 by 13/0/23 *</h3></div>
      </div>
-     <div id="InputContainer"class="DashboardBoxes"><button class="DashboardSelectorButtonSel  AddPrButton">Add Pr's</button><button class="DashboardSelectorButtonUnSel  AddGoalButton">Update Goal's</button><button class="DashboardSelectorButtonUnSel  AccountSettingsButton">Account Settings</button><div id="AddPrContent"><select id="AddPrLiftSelector"><option>Squat</option><option>Bench</option><option>Deadlift</option></select><input type="date" id="AddPrDateSelector"><input placeholder="Amount (kg)" id="AddPrAmountInput"><select id="AddPrRepSelecor"><option>Reps</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select><input placeholder="Comment on lift (optional)" id="AddPrCommentInput"><button id="AddPrFinalSubmitButton">Submit</button></div>
+     <div id="InputContainer"class="DashboardBoxes"><button class="DashboardSelectorButtonSel  AddPrButton">Add Lift's</button><button class="DashboardSelectorButtonUnSel  AddGoalButton">Update Goal's</button><button class="DashboardSelectorButtonUnSel  AccountSettingsButton">Account Settings</button><div id="AddPrContent"><select id="AddPrLiftSelector"><option>Squat</option><option>Bench</option><option>Deadlift</option></select><input type="date" id="AddPrDateSelector"><input placeholder="Amount (kg)" id="AddPrAmountInput"><select id="AddPrRepSelecor"><option>Reps</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><button id="AddPrFinalSubmitButton">Submit</button></div>
      <div id="UpdateGoalsContent"hidden><select id="UpdateGoalsLiftSelector"><option>Squat</option><option>Bench</option><option>Deadlift</option></select><input type="date"id="UpdateGoalsDateSelector"><input id="UpdateGoalsAmountInput"placeholder="Amount (kg)"><input id="UpdateGoalsCommentInput"placeholder="Comment on goal (optional)"><button id="UpdateGoalsFinalSubmitButton">Submit</button></div>
-     <div id="AccountSettingsContent"hidden><input placeholder="New Password" id="AccountSettingsPassInput"type="password"><input placeholder="New Password Confirm" id="AccountSettingsPassInputConfirm"type="password"><div id="AccountSettingsErrorMessage"hidden>Please Match Passwords</div><button id="AccountSettingsChangePassword">Change Password</button><button id="AccountSettingsLogOutButton">Log Out</button><button id="AccountSettingsDeleteAccountButton">Delete Account</button></div>
-    </div>
-     <div id="CoolStatsCon"class="DashboardBoxes"></div>
+     <div id="AccountSettingsContent"hidden><input placeholder="New Password" id="AccountSettingsPassInput"type="password"><input placeholder="New Password Confirm" id="AccountSettingsPassInputConfirm"type="password"><div id="AccountSettingsErrorMessage"hidden>PLEASE FILL INPUTS CORRECTLY</div><button id="AccountSettingsChangePassword">Change Password</button><button id="AccountSettingsLogOutButton">Log Out</button><button id="AccountSettingsDeleteAccountButton">Delete Account</button></div>
+     <h3 id="addupdateerror"hidden>PLEASE FILL INPUTS CORRECTLY</h3>
+    </div><div id='coolstat1' class="DashboardBoxes"><h4 id="totalweigthtitle">Total weight lifted</h4>
+      <h2 id="totalweightlifted">132345</h2></div>
+<div  id='coolstat2'class="DashboardBoxes"><h4 id="bestliftitle">Best lift</h4>
+  <h2 id="bestlift">Deadlift</h2></div><div  id='coolstat3'class="DashboardBoxes"><h4 id="mostrecenttitle">Most recent lift</h4>
+  <h3 id="mostrecentlift">100 squat 13/1/20</h3></div><div  id='coolstat4'class="DashboardBoxes"><h4 id="ageofaccounttitle">Age of account</h4>
+    <h2 id="ageofaccount">340 days</h2></div><div  id='coolstat5'class="DashboardBoxes"><h4 id='rankuptitle' >How far from ranking up </h4><div id="rankupcontainer"><h4 id="RankUpText">gain 233 to rank up</h4><div id="rankupchartcon"><canvas id="rankuppie"></canvas></div></div><h1 hidden id="rankupnumber1">You are rank 1</h1></div>
+  
      <div id="LeaderboardTableCon"class="DashboardBoxes">
-      <h3 id="LeaderBoardTitle">Where you sit on leaderboard</h3><table id="LeaderBoardTable">
+      <h3 id="LeaderBoardTitle">Where you sit on leaderboard</h3><div id='tablecon'><table id="LeaderBoardTable">
       <thead>
         <tr >
+          <th>Rank</th>
           <th>Username</th>
           <th>Squat</th>
-          <th>bench</th>
+          <th>Bench</th>
           <th>Deadlift</th>
           <th>Total</th>
         </tr>
       </thead>
       <tbody id="tabledata"></tbody>
     </table>
+    </div>
      </div>
      <div id="MainGraphCon"class="DashboardBoxes"><button class='MainUnSelected SquatButtonMain'>Squat</button><button class='MainSelected BenchButtonMain'>Bench</button><button class='MainUnSelected DeadliftButtonMain'>Deadlift</button><canvas id="LineGraph"></canvas></div>
-     <div id="MinorGraphCon"class="DashboardBoxes"><h3 id="HowCloseTitle">How close to current goal's</h3><canvas id="DonghnutGraphS"style="display: inline"></canvas><canvas id="DonghnutGraphB"style="display: inline"></canvas><canvas id="DonghnutGraphD"style="display: inline"></canvas></div>
+     <div id="MinorGraphCon"class="DashboardBoxes"><h3 id="HowCloseTitle">How close to current goal's</h3><canvas id="DonghnutGraphS"style="display: inline"></canvas><canvas id="DonghnutGraphB"style="display: inline"></canvas><canvas id="DonghnutGraphD"style="display: inline"></canvas><h2 id="updategoaltexts">PLEASE UPDATE SQAUT GOAL</h2><h2 id="updategoaltextb">PLEASE UPDDATE BENCH GOAL</h2><h2 id="updategoaltextd">PLEASE UPDATE DEADLIFT GOAL</h2></div>
      <div id="BlurBox" hidden>
 
       
-     </div>
-      <div id="NewAccountUpdatePopUp"hidden >
+     </div></div>
+      <div id="NewAccountUpdatePopUp" hidden>
+    <h1 id="NewAccountTitle">Current Personal Bests</h1>
+  
+    <input id="NewAccountAmountCurInputSqaut"placeholder="Squat Amount (kg)">
+    <input id="NewAccountAmountCurInputBench"placeholder="Bench Amount (kg)">
+    <input id="NewAccountAmountCurInputDeadlift"placeholder="Deadlift Amount (kg)">
     <h1 id="NewAccountTitle">Add Goals For New Account</h1>
     <h3 class="NewAccountMiniTitles">Squat</h3>
     <input type="date"id="NewAccountDateSelectorSqaut"><input id="NewAccountAmountInputSqaut"placeholder="Amount (kg)"><input id="NewAccountCommentInputSqaut"placeholder="Comment on goal (optional)">
@@ -67,6 +83,11 @@
     <h3 class="NewAccountMiniTitles">Deadlift</h3>
     <input type="date"id="NewAccountDateSelectorDeadlift"><input id="NewAccountAmountInputDeadlift"placeholder="Amount (kg)"><input id="NewAccountCommentInputDeadlift"placeholder="Comment on goal (optional)"> <h3 id="NewAccountErrorMessage"hidden>Please fill all inputs</h3><button id="NewAccountFinalSubmitButton">Submit</button>
     
+    </div>
+    <div id="GoalCommentPopUp"hidden>
+    <h7 id="PopUpcommentTextGoal">Goal: Sqaut: 120 by 15/0/23
+    </h7>
+    <p id="PopUpcommentTextComment">Comment: With freinds</p>
     </div>
    
     </div>

@@ -1,5 +1,7 @@
 import Chart from "chart.js/auto";
 import annotationPlugin from "chartjs-plugin-annotation";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+
 Chart.register(annotationPlugin);
 
 const UsernameInput = document.querySelector("#UserNameInput");
@@ -19,7 +21,10 @@ const LogInFin = document.querySelector("#LoginButtonFin");
 const WholeLogInContainer = document.querySelector("#LogInContainer");
 const ErrorSuccesCon = document.querySelector("#ErorrSuccessMessageCon");
 const ErrorSucces = document.querySelector("#ErorrSuccessMessage");
-const GreetingsMessage = document.getElementById("GreetingsMessage");
+const GreetingsMessageusername = document.getElementById(
+  "GreetingsMessageUsername2"
+);
+const GreetingsMessageAge = document.getElementById("GreetingsMessageAge2");
 const LogInTitleCon = document.querySelector("#titleCon");
 const dashboardCon = document.querySelector("#Dashboard");
 
@@ -30,6 +35,7 @@ const DonghnutGraph3 = document.getElementById("DonghnutGraphD");
 const AllDashBoardSelectorButtons = document.querySelectorAll(
   ".DashboardSelectorButtonUnSel, .DashboardSelectorButtonSel"
 );
+
 const AllMainButtonSelectors = document.querySelectorAll(
   ".MainUnSelected, .MainSelected"
 );
@@ -55,7 +61,6 @@ const AddPrWeight = document.querySelector("#AddPrAmountInput");
 
 const AddPrDate = document.querySelector("#AddPrDateSelector");
 
-const AddPrComment = document.querySelector("#AddPrCommentInput");
 const AddPrSubmit = document.querySelector("#AddPrFinalSubmitButton");
 const AddPrRepDropdown = document.querySelector("#AddPrRepSelecor");
 
@@ -119,6 +124,39 @@ const NewAccountErrorMessage = document.querySelector(
 );
 const BlurBox = document.querySelector("#BlurBox");
 const tabledata = document.querySelector("#tabledata");
+const GoalCommentDiv = document.querySelector("#GoalCommentPopUp");
+const GoalCommentTextGoal = document.querySelector("#PopUpcommentTextGoal");
+const GoalCommentTextComment = document.querySelector(
+  "#PopUpcommentTextComment"
+);
+const CurrentGoalSquattext = document.querySelector(`#CurrentGoalsSquat`);
+const CurrentGoalBenchtext = document.querySelector(`#CurrentGoalsBench`);
+const CurrentGoalsDeadlifttext = document.querySelector(
+  `#CurrentGoalsDeadlift`
+);
+const activityGraph = document.querySelector(`#Activitygraph`);
+const totalweight = document.querySelector("#totalweightlifted");
+const bestlift = document.querySelector("#bestlift");
+
+const mostrecentlift = document.querySelector("#mostrecentlift");
+const currentliftsquat = document.querySelector(
+  "#NewAccountAmountCurInputSqaut"
+);
+const currentliftbench = document.querySelector(
+  "#NewAccountAmountCurInputBench"
+);
+const currentliftdeadlift = document.querySelector(
+  "#NewAccountAmountCurInputDeadlift"
+);
+const LoginContainer = document.querySelector("#LogInContainer");
+const rankupcontainer = document.querySelector("#rankupcontainer");
+const rankupnumber1 = document.querySelector("#rankupnumber1");
+const addupdateerror = document.querySelector("#addupdateerror");
+const ageofaccount = document.querySelector("#ageofaccount");
+const updategoaltexts = document.querySelector("#updategoaltexts");
+const updategoaltextb = document.querySelector("#updategoaltextb");
+const updategoaltextd = document.querySelector("#updategoaltextd");
+const MainDashCon = document.querySelector("#maindashcon");
 
 //General//
 function ClearingInputField(inputobject) {
@@ -141,7 +179,12 @@ function InitiatingCreateAccountUI() {
   hideEl(LogInFinCon);
   revealEl(LogInINCon);
   hideEl(ErrorSuccesCon);
+  LoginContainer.style.height = "178px";
+  ClearingInputField(UsernameInput);
+  ClearingInputField(PasswordInput1);
+  ClearingInputField(PasswordInput2);
 }
+
 function InitiatingLogInUI() {
   hideEl(PasswordInput2Con);
   revealEl(CreateAccountButtonINCon);
@@ -149,15 +192,21 @@ function InitiatingLogInUI() {
   revealEl(LogInFinCon);
   hideEl(LogInINCon);
   hideEl(ErrorSuccesCon);
+  LoginContainer.style.height = "145px";
+  ClearingInputField(UsernameInput);
+  ClearingInputField(PasswordInput1);
+  ClearingInputField(PasswordInput2);
 }
 
 // Accounts//
 let arrayofaccountobjects = [];
 let loggedInAccountObject;
+let loggedInRank;
 class Accounts {
   constructor(username, password) {
     this.username = username;
     this.password = password;
+    this.dateAccountCreated = undefined;
     this.Squat = {
       Lifts: [],
       goal: {
@@ -197,6 +246,10 @@ function getObject(key) {
 }
 
 function UpdatingLoggedInAccountValuesToLocalStorage() {
+  localStorage.removeItem(
+    loggedInAccountObject.username,
+    JSON.stringify(loggedInAccountObject)
+  );
   localStorage.setItem(
     loggedInAccountObject.username,
     JSON.stringify(loggedInAccountObject)
@@ -214,6 +267,7 @@ function createAccount() {
     ClearingInputField(PasswordInput1);
     ClearingInputField(PasswordInput2);
     InitiatingLogInUI();
+    LoginContainer.style.height = "178px";
     revealEl(ErrorSuccesCon);
     ChangeTextOfElement("ACCOUNT CREATED", ErrorSucces);
   } else {
@@ -233,13 +287,21 @@ function LoggingIn() {
     if (PasswordInput1.value == LoggingInAccount.password) {
       loggedInAccountObject = LoggingInAccount;
       LoadingDashboard();
+
+      dashboardCon.style.display = "grid";
     } else {
       revealEl(ErrorSuccesCon);
       ChangeTextOfElement("WRONG PASSWORD", ErrorSucces);
+      LoginContainer.style.height = "178px";
+      ClearingInputField(UsernameInput);
+      ClearingInputField(PasswordInput1);
     }
   } else {
     revealEl(ErrorSuccesCon);
     ChangeTextOfElement("ACCOUNT NOT FOUND", ErrorSucces);
+    LoginContainer.style.height = "178px";
+    ClearingInputField(UsernameInput);
+    ClearingInputField(PasswordInput1);
   }
 }
 function DeletingAccount() {
@@ -252,28 +314,37 @@ function SortingLiftsByDateInLoggedInObject() {
   loggedInAccountObject.Bench.Lifts.sort(
     (a, b) => new Date(a.Date) - new Date(b.Date)
   );
+
   loggedInAccountObject.Deadlift.Lifts.sort(
     (a, b) => new Date(a.Date) - new Date(b.Date)
   );
 }
 
 function UpdatingArrayOfAllAccountObjects() {
+  arrayofaccountobjects = [];
   let arrayofkeys = Object.keys(localStorage);
   arrayofkeys.forEach((key) => {
     if (key !== "debug") {
       arrayofaccountobjects.push(JSON.parse(localStorage.getItem(key)));
     }
   });
-  console.log(arrayofaccountobjects);
 }
+
 function ChangingPasswwordLoggedIn() {
-  if (ChangingPassword.value == ChangingPasswordConfirm.value) {
+  if (
+    ChangingPassword.value == ChangingPasswordConfirm.value &&
+    ChangingPassword.value !== ""
+  ) {
     loggedInAccountObject.password = ChangingPassword;
     ClearingInputField(ChangingPassword);
     ClearingInputField(ChangingPasswordConfirm);
     hideEl(ChangePasswordError);
+    ChangingPassword.value = "";
+    ChangingPasswordConfirm.value = "";
   } else {
     revealEl(ChangePasswordError);
+    ChangingPassword.value = "";
+    ChangingPasswordConfirm.value = "";
   }
 }
 
@@ -288,6 +359,7 @@ function MakeUpdateAccountPopUpIfEmpty() {
   NewAccountCommentSqaut.value = "";
   NewAccountCommentBench.value = "";
   NewAccountCommentDeadlift.value = "";
+
   if (loggedInAccountObject.Bench.goal.weight == undefined) {
     revealEl(BlurBox);
     revealEl(NewAccountPopUp);
@@ -295,14 +367,14 @@ function MakeUpdateAccountPopUpIfEmpty() {
 }
 function LoadingDashboard() {
   hideEl(WholeLogInContainer);
-  hideEl(LogInTitleCon);
-  revealEl(dashboardCon);
+  // hideEl(LogInTitleCon);
+  revealEl(MainDashCon);
 }
 
 function LoggingOut() {
   revealEl(WholeLogInContainer);
   revealEl(LogInTitleCon);
-  hideEl(dashboardCon);
+  hideEl(MainDashCon);
   loggedInAccountObject = undefined;
 }
 
@@ -331,46 +403,174 @@ function CalcutlatingAmountLeftToHitGoal(Lift) {
     );
   }
 }
+function UpdatingRecentLift() {
+  let arrayofrecent = [
+    loggedInAccountObject.Deadlift.Lifts[
+      loggedInAccountObject.Deadlift.Lifts.length - 1
+    ],
+
+    loggedInAccountObject.Bench.Lifts[
+      loggedInAccountObject.Bench.Lifts.length - 1
+    ],
+
+    loggedInAccountObject.Squat.Lifts[
+      loggedInAccountObject.Squat.Lifts.length - 1
+    ],
+  ];
+
+  arrayofrecent.sort((a, b) => {
+    return new Date(a.Date) - new Date(b.Date);
+  });
+  if (
+    arrayofrecent[2] ==
+    loggedInAccountObject.Squat.Lifts[
+      loggedInAccountObject.Squat.Lifts.length - 1
+    ]
+  ) {
+    ChangeTextOfElement(
+      `Squatted ${arrayofrecent[2].Amount} on ${arrayofrecent[2].Date}`,
+      mostrecentlift
+    );
+  } else if (
+    arrayofrecent[2] ==
+    loggedInAccountObject.Bench.Lifts[
+      loggedInAccountObject.Bench.Lifts.length - 1
+    ]
+  ) {
+    ChangeTextOfElement(
+      `Benched ${arrayofrecent[2].Amount} on ${arrayofrecent[2].Date}`,
+      mostrecentlift
+    );
+  } else if (
+    arrayofrecent[2] ==
+    loggedInAccountObject.Deadlift.Lifts[
+      loggedInAccountObject.Deadlift.Lifts.length - 1
+    ]
+  ) {
+    ChangeTextOfElement(
+      `Deadlifted ${arrayofrecent[2].Amount} on ${arrayofrecent[2].Date}`,
+      mostrecentlift
+    );
+  }
+}
+function UpdatingAgeOfAccount() {
+  let oneDay = 24 * 60 * 60 * 1000;
+  let firstDate = new Date(loggedInAccountObject.dateAccountCreated);
+  let secondDate = new Date();
+  let diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
+  if (diffDays == 1) {
+    ageofaccount.textContent = `${diffDays} day`;
+  } else ageofaccount.textContent = `${diffDays} days`;
+}
+function UpdatingHowFarFromRankUpGraph() {
+  let loggedtotal = +document.querySelector(`#total${loggedInRank}`)
+    .textContent;
+  if (+loggedInRank == 1) {
+    hideEl(rankupcontainer);
+    revealEl(rankupnumber1);
+  } else {
+    document.querySelector("#RankUpText").textContent = `Gain ${
+      +document.querySelector(`#total${loggedInRank - 1}`).textContent -
+      +document.querySelector(`#total${loggedInRank}`).textContent +
+      1
+    } to rank up`;
+    activitycongraph.data = {
+      labels: [
+        `Current Total: ${+document.querySelector(`#total${loggedInRank}`)
+          .textContent}`,
+        `Next Rank Total: ${
+          +document.querySelector(`#total${loggedInRank - 1}`).textContent + 1
+        }`,
+      ],
+      datasets: [
+        {
+          label: "",
+          data: [
+            +document.querySelector(`#total${loggedInRank}`).textContent,
+            +document.querySelector(`#total${loggedInRank - 1}`).textContent -
+              +document.querySelector(`#total${loggedInRank}`).textContent +
+              1,
+          ],
+          backgroundColor: ["black", "white"],
+          hoverOffset: 5,
+        },
+      ],
+    };
+  }
+  activitycongraph.update();
+}
 function UpdatingHowCloseToCurrentMaxes() {
+  updategoaltexts.style.visibility = "hidden";
+  updategoaltextb.style.visibility = "hidden";
+  updategoaltextd.style.visibility = "hidden";
+  if (
+    +HeighestWEightOfArray(loggedInAccountObject.Squat.Lifts) >=
+    +loggedInAccountObject.Squat.goal.weight
+  ) {
+    updategoaltexts.style.visibility = "visible";
+  }
+  if (
+    +HeighestWEightOfArray(loggedInAccountObject.Bench.Lifts) >=
+    +loggedInAccountObject.Bench.goal.weight
+  ) {
+    updategoaltextb.style.visibility = "visible";
+  }
+  if (
+    +HeighestWEightOfArray(loggedInAccountObject.Deadlift.Lifts) >=
+    +loggedInAccountObject.Deadlift.goal.weight
+  ) {
+    updategoaltextd.style.visibility = "visible";
+  }
   DonghnutSqaut.data = {
-    labels: ["Current Squat Max", "Left To Reach Goal"],
+    labels: [
+      `Squat Max: ${HeighestWEightOfArray(loggedInAccountObject.Squat.Lifts)}`,
+      `Squat Goal: ${loggedInAccountObject.Squat.goal.weight}`,
+    ],
     datasets: [
       {
-        label: "online tutorial subjects",
+        label: "",
         data: [
           HeighestWEightOfArray(loggedInAccountObject.Squat.Lifts),
           CalcutlatingAmountLeftToHitGoal("Squat"),
         ],
-        backgroundColor: ["black", "grey"],
+        backgroundColor: ["black", "white"],
         hoverOffset: 5,
       },
     ],
   };
 
   DonghnutBench.data = {
-    labels: ["Current Bench Max", "Left To Reach Goal"],
+    labels: [
+      `Bench Max: ${HeighestWEightOfArray(loggedInAccountObject.Bench.Lifts)}`,
+      `Bench Goal: ${loggedInAccountObject.Bench.goal.weight}`,
+    ],
     datasets: [
       {
-        label: "online tutorial subjects",
+        label: "",
         data: [
           HeighestWEightOfArray(loggedInAccountObject.Bench.Lifts),
           CalcutlatingAmountLeftToHitGoal("Bench"),
         ],
-        backgroundColor: ["black", "grey"],
+        backgroundColor: ["black", "white"],
         hoverOffset: 5,
       },
     ],
   };
   DonghnutDeadlift.data = {
-    labels: ["Current Deadlift Max", "Left To Reach Goal"],
+    labels: [
+      `Deadlift Max: ${HeighestWEightOfArray(
+        loggedInAccountObject.Deadlift.Lifts
+      )}`,
+      `Deadlift Goal: ${loggedInAccountObject.Deadlift.goal.weight}`,
+    ],
     datasets: [
       {
-        label: "online tutorial subjects",
+        label: "",
         data: [
           HeighestWEightOfArray(loggedInAccountObject.Deadlift.Lifts),
           CalcutlatingAmountLeftToHitGoal("Deadlift"),
         ],
-        backgroundColor: ["black", "grey"],
+        backgroundColor: ["black", "white"],
         hoverOffset: 5,
       },
     ],
@@ -379,20 +579,49 @@ function UpdatingHowCloseToCurrentMaxes() {
   DonghnutBench.update();
   DonghnutDeadlift.update();
 }
-function UpdatingTableDate(tabledata) {
-  let dataHtml = "";
-  for (let user of tabledata) {
-    dataHtml += `<tr><td>${setObject}`;
+
+function UpdatingTableData(AccountArray) {
+  let dataHtml = ``;
+  let arrayofTabledata = [];
+  let rank = 0;
+  for (let user of AccountArray) {
+    let highestSqaut = HeighestWEightOfArray(user.Squat.Lifts);
+    let highestBench = HeighestWEightOfArray(user.Bench.Lifts);
+    let highestDeadlift = HeighestWEightOfArray(user.Deadlift.Lifts);
+    let total = highestSqaut + highestBench + highestDeadlift;
+    arrayofTabledata.push({
+      username: user.username,
+      highestSqaut: highestSqaut,
+      highestBench: highestBench,
+      highestDeadlift: highestDeadlift,
+      total: total,
+    });
   }
+  arrayofTabledata.sort((a, b) => {
+    return b.total - a.total;
+  });
+  for (let tableuser of arrayofTabledata) {
+    rank += 1;
+    if (tableuser.username == loggedInAccountObject.username) {
+      loggedInRank = rank;
+      dataHtml += `<tr  class="loggedinrow"><td>${rank}</td><td>${tableuser.username}</td><td>${tableuser.highestSqaut}</td><td>${tableuser.highestBench}</td><td>${tableuser.highestDeadlift}</td><td id='total${rank}'>${tableuser.total}</td></tr>`;
+    } else {
+      dataHtml += `<tr ><td>${rank}</td><td>${tableuser.username}</td><td>${tableuser.highestSqaut}</td><td>${tableuser.highestBench}</td><td>${tableuser.highestDeadlift}</td><td id='total${rank}'>${tableuser.total}</td></tr>`;
+    }
+  }
+  tabledata.innerHTML = dataHtml;
 }
+
 function UpdatingMainGraph() {
   if (MainButtonSelectBench.classList.contains("MainSelected")) {
     MainGrpah.data = {
       labels: loggedInAccountObject.Bench.Lifts.map((a) => a.Date),
       datasets: [
         {
-          label: "Pr's",
-          backgroundColor: "black",
+          label: "Lift's",
+          borderColor: "white",
+
+          fill: "origin",
           data: loggedInAccountObject.Bench.Lifts.map((a) => a.Amount),
           borderWidth: 1,
         },
@@ -423,8 +652,10 @@ function UpdatingMainGraph() {
       labels: loggedInAccountObject.Deadlift.Lifts.map((a) => a.Date),
       datasets: [
         {
-          label: "Deadlift",
-          backgroundColor: "black",
+          label: "Lift's",
+          borderColor: "white",
+
+          fill: "origin",
           data: loggedInAccountObject.Deadlift.Lifts.map((a) => a.Amount),
           borderWidth: 1,
         },
@@ -455,8 +686,10 @@ function UpdatingMainGraph() {
       labels: loggedInAccountObject.Squat.Lifts.map((a) => a.Date),
       datasets: [
         {
-          label: "Squat",
-          backgroundColor: "black",
+          label: "Lift's",
+          borderColor: "white",
+
+          fill: "origin",
           data: loggedInAccountObject.Squat.Lifts.map((a) => a.Amount),
           borderWidth: 1,
         },
@@ -486,9 +719,10 @@ function UpdatingMainGraph() {
 }
 function ChangeGreetingsMessage() {
   ChangeTextOfElement(
-    `Welcome to your hub, ${loggedInAccountObject.username}`,
-    GreetingsMessage
+    `${loggedInAccountObject.username}`,
+    GreetingsMessageusername
   );
+  ChangeTextOfElement(`${loggedInRank}`, GreetingsMessageAge);
 }
 function ChangingCurrentStats() {
   let maxSquat = HeighestWEightOfArray(loggedInAccountObject.Squat.Lifts);
@@ -501,7 +735,36 @@ function ChangingCurrentStats() {
     CurrentSBD
   );
 }
+function UpdatingBestLift() {
+  let array = [
+    HeighestWEightOfArray(loggedInAccountObject.Squat.Lifts),
+    HeighestWEightOfArray(loggedInAccountObject.Bench.Lifts),
+    HeighestWEightOfArray(loggedInAccountObject.Deadlift.Lifts),
+  ];
+  if (Math.max(...array) == array[0]) {
+    ChangeTextOfElement("Squat", bestlift);
+  }
+  if (Math.max(...array) == array[1]) {
+    ChangeTextOfElement("Bench", bestlift);
+  }
+  if (Math.max(...array) == array[2]) {
+    ChangeTextOfElement("Deadlift", bestlift);
+  }
+}
 
+function UpdatingTotalWeight() {
+  let addedAmount = 0;
+  loggedInAccountObject.Squat.Lifts.forEach((lift) => {
+    addedAmount += Number(lift.Amount);
+  });
+  loggedInAccountObject.Bench.Lifts.forEach((lift) => {
+    addedAmount += Number(lift.Amount);
+  });
+  loggedInAccountObject.Deadlift.Lifts.forEach((lift) => {
+    addedAmount += Number(lift.Amount);
+  });
+  ChangeTextOfElement(addedAmount, totalweight);
+}
 function UpdateGoalReusedFunction(Lift) {
   if (loggedInAccountObject[Lift].goal.weight == undefined) {
     ChangeTextOfElement(
@@ -510,13 +773,22 @@ function UpdateGoalReusedFunction(Lift) {
       document.querySelector(`#CurrentGoals${Lift}`)
     );
   } else {
-    ChangeTextOfElement(
-      `${Lift}: ${loggedInAccountObject[Lift].goal.weight} by ${loggedInAccountObject[Lift].goal.date} *
+    if (loggedInAccountObject[Lift].goal.comment != undefined || "") {
+      ChangeTextOfElement(
+        `${Lift}: ${loggedInAccountObject[Lift].goal.weight} by ${loggedInAccountObject[Lift].goal.date} +
   `,
-      document.querySelector(`#CurrentGoals${Lift}`)
-    );
+        document.querySelector(`#CurrentGoals${Lift}`)
+      );
+    } else {
+      ChangeTextOfElement(
+        `${Lift}: ${loggedInAccountObject[Lift].goal.weight} by ${loggedInAccountObject[Lift].goal.date} 
+    `,
+        document.querySelector(`#CurrentGoals${Lift}`)
+      );
+    }
   }
 }
+
 function UpdatingGoals() {
   UpdateGoalReusedFunction("Bench");
   UpdateGoalReusedFunction("Squat");
@@ -524,13 +796,87 @@ function UpdatingGoals() {
 }
 
 function UpdateAllDashboardUI() {
-  ChangeGreetingsMessage();
   ChangingCurrentStats();
   UpdatingGoals();
   UpdatingMainGraph();
   UpdatingHowCloseToCurrentMaxes();
+  UpdatingArrayOfAllAccountObjects();
+  UpdatingTableData(arrayofaccountobjects);
+  ChangeGreetingsMessage();
+  UpdatingBestLift();
+  UpdatingTotalWeight();
+
+  UpdatingHowFarFromRankUpGraph();
+  UpdatingRecentLift();
+  UpdatingAgeOfAccount();
 }
-//Adding Pr's, updating goal and Account Settings UI and Funtions
+
+//Making GoalComment Appear
+
+function GoalCommentAppear(event) {
+  if (event.target.classList.contains("SqautGoal")) {
+    if (CurrentGoalSquattext.textContent.includes("+")) {
+      document.getElementById("GoalCommentPopUp").style.left = `${
+        event.pageX + 405
+      }px`;
+      document.getElementById("GoalCommentPopUp").style.top = `${
+        event.pageY + 35
+      }px`;
+      GoalCommentTextGoal.style.left = ChangeTextOfElement(
+        `Goal: ${loggedInAccountObject.Squat.goal.weight} by ${loggedInAccountObject.Squat.goal.date}`,
+        GoalCommentTextGoal
+      );
+      ChangeTextOfElement(
+        `Comment: ${loggedInAccountObject.Squat.goal.comment}`,
+        GoalCommentTextComment
+      );
+      revealEl(GoalCommentDiv);
+      CurrentGoalSquattext.style.cursor = "pointer";
+    }
+  }
+  if (event.target.classList.contains("BenchGoal")) {
+    if (CurrentGoalBenchtext.textContent.includes("+")) {
+      document.getElementById("GoalCommentPopUp").style.left = `${
+        event.pageX + 405
+      }px`;
+      document.getElementById("GoalCommentPopUp").style.top = `${
+        event.pageY + 35
+      }px`;
+      ChangeTextOfElement(
+        `Goal: ${loggedInAccountObject.Bench.goal.weight} by ${loggedInAccountObject.Bench.goal.date}`,
+        GoalCommentTextGoal
+      );
+      ChangeTextOfElement(
+        `Comment: ${loggedInAccountObject.Bench.goal.comment}`,
+        GoalCommentTextComment
+      );
+      revealEl(GoalCommentDiv);
+      CurrentGoalBenchtext.style.cursor = "pointer";
+    }
+  }
+  if (event.target.classList.contains("DeadliftGoal")) {
+    if (CurrentGoalsDeadlifttext.textContent.includes("+")) {
+      document.getElementById("GoalCommentPopUp").style.left = `${
+        event.pageX + 402
+      }px`;
+      document.getElementById("GoalCommentPopUp").style.top = `${
+        event.pageY + 35
+      }px`;
+      ChangeTextOfElement(
+        `Goal: ${loggedInAccountObject.Deadlift.goal.weight} by ${loggedInAccountObject.Deadlift.goal.date}`,
+        GoalCommentTextGoal
+      );
+      ChangeTextOfElement(
+        `Comment: ${loggedInAccountObject.Deadlift.goal.comment}`,
+        GoalCommentTextComment
+      );
+      revealEl(GoalCommentDiv);
+      CurrentGoalsDeadlifttext.style.cursor = "pointer";
+    }
+  }
+}
+
+//  Pr's, updating goal and Account Settings UI and Funtions
 
 function changingClickedButtonToSelected(button) {
   AllDashBoardSelectorButtons.forEach((element) => {
@@ -552,6 +898,8 @@ function ChangingContainerContent(event) {
     hideEl(AccountSettingsContent);
     hideEl(UpdateGoalsContent);
     revealEl(AddPrContent);
+    hideEl(addupdateerror);
+    hideEl(ChangePasswordError);
   }
 
   if (
@@ -562,6 +910,8 @@ function ChangingContainerContent(event) {
     hideEl(AccountSettingsContent);
     hideEl(AddPrContent);
     revealEl(UpdateGoalsContent);
+    hideEl(addupdateerror);
+    hideEl(ChangePasswordError);
   }
   if (
     event.target.classList.contains("DashboardSelectorButtonUnSel") &&
@@ -571,8 +921,11 @@ function ChangingContainerContent(event) {
     hideEl(UpdateGoalsContent);
     hideEl(AddPrContent);
     revealEl(AccountSettingsContent);
+    hideEl(addupdateerror);
+    hideEl(ChangePasswordError);
   }
 }
+
 function MainchangingClickedButtonToSelected(button) {
   AllMainButtonSelectors.forEach((element) => {
     if (element.classList.contains("MainSelected")) {
@@ -616,20 +969,49 @@ function NewAccountUpdatingAccount() {
     NewAccountAmountSqaut.value &&
     NewAccountAmountBench.value &&
     NewAccountAmountDeadlift.value &&
-    NewAccountCommentSqaut.value &&
-    NewAccountCommentBench.value &&
-    NewAccountCommentDeadlift.value != ""
+    currentliftbench.value &&
+    currentliftdeadlift.value &&
+    currentliftsquat.value != ""
   ) {
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+
+    let today = year + "-" + month + "-" + day;
+    loggedInAccountObject.dateAccountCreated = today;
+    loggedInAccountObject.Bench.Lifts.push({
+      Amount: currentliftbench.value,
+      Date: today,
+    });
+    loggedInAccountObject.Deadlift.Lifts.push({
+      Amount: currentliftdeadlift.value,
+      Date: today,
+    });
+    loggedInAccountObject.Squat.Lifts.push({
+      Amount: currentliftsquat.value,
+      Date: today,
+    });
     loggedInAccountObject.Squat.goal.weight = NewAccountAmountSqaut.value;
     loggedInAccountObject.Squat.goal.date = NewAccountDateSqaut.value;
-    loggedInAccountObject.Squat.goal.comment = NewAccountCommentSqaut.value;
     loggedInAccountObject.Bench.goal.weight = NewAccountAmountBench.value;
     loggedInAccountObject.Bench.goal.date = NewAccountDateBench.value;
-    loggedInAccountObject.Bench.goal.comment = NewAccountCommentBench.value;
     loggedInAccountObject.Deadlift.goal.weight = NewAccountAmountDeadlift.value;
     loggedInAccountObject.Deadlift.goal.date = NewAccountDateDeadlift.value;
-    loggedInAccountObject.Deadlift.goal.comment =
-      NewAccountCommentDeadlift.value;
+
+    if (NewAccountCommentBench.value != "") {
+      loggedInAccountObject.Bench.goal.comment = NewAccountCommentBench.value;
+    }
+    if (NewAccountCommentSqaut.value != "") {
+      loggedInAccountObject.Squat.goal.comment = NewAccountCommentSqaut.value;
+    }
+    if (NewAccountCommentDeadlift.value != "") {
+      loggedInAccountObject.Deadlift.goal.comment =
+        NewAccountCommentDeadlift.value;
+    }
     hideEl(NewAccountPopUp);
     hideEl(BlurBox);
   } else {
@@ -643,11 +1025,15 @@ function NewAccountUpdatingAccount() {
     NewAccountCommentSqaut.value = "";
     NewAccountCommentBench.value = "";
     NewAccountCommentDeadlift.value = "";
+    currentliftbench.value = "";
+    currentliftdeadlift.value = "";
+    currentliftsquat.value = "";
   }
 }
 
 function AddPrToLoggedInAccountReUSedFunction(Lift) {
-  if (AddPrDropdown.value == Lift) {
+  if (AddPrDate.value !== "" && AddPrWeight.value !== "") {
+    hideEl(addupdateerror);
     if (AddPrRepDropdown.value != "Reps") {
       let calculatedPr = Math.round(
         AddPrWeight.value / (1.0278 - 0.0278 * Number(AddPrRepDropdown.value))
@@ -655,44 +1041,81 @@ function AddPrToLoggedInAccountReUSedFunction(Lift) {
       loggedInAccountObject[Lift].Lifts.push({
         Amount: calculatedPr,
         Date: AddPrDate.value,
-        Comment: AddPrComment.value,
       });
     } else {
       loggedInAccountObject[Lift].Lifts.push({
         Amount: AddPrWeight.value,
         Date: AddPrDate.value,
-        Comment: AddPrComment.value,
       });
     }
+
     loggedInAccountObject.Squat.Lifts.sort(
       (a, b) => new Date(a.Date) - new Date(b.Date)
     );
-    loggedInAccountObject.Bench.Lifts.sort((a, b) => a.Date - b.Date);
-    loggedInAccountObject.Deadlift.Lifts.sort((a, b) => a.Date - b.Date);
+    loggedInAccountObject.Bench.Lifts.sort(
+      (a, b) => new Date(a.Date) - new Date(b.Date)
+    );
+    loggedInAccountObject.Deadlift.Lifts.sort(
+      (a, b) => new Date(a.Date) - new Date(b.Date)
+    );
+  } else if (
+    (AddPrDropdown.value == Lift && AddPrDate.value == "") ||
+    AddPrDate.AddPrWeight == ""
+  ) {
+    revealEl(addupdateerror);
   }
+
+  AddPrDate.value = "";
+  AddPrWeight.value = "";
+
+  AddPrRepDropdown.value = "Reps";
 }
+
 function UpdateGoalToLoggedInAccountReUSedFunction(Lift) {
-  if (UpdateDropdown.value == Lift) {
+  if (
+    UpdateDropdown.value == Lift &&
+    UpdateDate.value !== "" &&
+    UpdateWeight.value !== ""
+  ) {
+    hideEl(addupdateerror);
     loggedInAccountObject[Lift].goal.weight = UpdateWeight.value;
     loggedInAccountObject[Lift].goal.date = UpdateDate.value;
-    loggedInAccountObject[Lift].goal.comment = UpdateComment.value;
+    if (UpdateComment.value !== "") {
+      loggedInAccountObject[Lift].goal.comment = UpdateComment.value;
+    } else {
+      loggedInAccountObject[Lift].goal.comment = undefined;
+    }
+  } else if (UpdateDropdown.value == Lift) {
+    revealEl(addupdateerror);
   }
+  UpdateComment.value = "";
+  UpdateDate.value = "";
+  UpdateWeight.value = "";
 }
 function AddPrToLoggedInAccount() {
-  AddPrToLoggedInAccountReUSedFunction("Squat");
-  AddPrToLoggedInAccountReUSedFunction("Bench");
-  AddPrToLoggedInAccountReUSedFunction("Deadlift");
+  if (AddPrDropdown.value == "Deadlift") {
+    AddPrToLoggedInAccountReUSedFunction("Deadlift");
+  } else if (AddPrDropdown.value == "Squat") {
+    AddPrToLoggedInAccountReUSedFunction("Squat");
+  } else if (AddPrDropdown.value == "Bench") {
+    AddPrToLoggedInAccountReUSedFunction("Bench");
+  }
 }
 
 function UpdatingGoalsLoggedInAccount() {
-  UpdateGoalToLoggedInAccountReUSedFunction("Squat");
-  UpdateGoalToLoggedInAccountReUSedFunction("Bench");
-  UpdateGoalToLoggedInAccountReUSedFunction("Deadlift");
+  if (UpdateDropdown.value == "Squat") {
+    UpdateGoalToLoggedInAccountReUSedFunction("Squat");
+  } else if (UpdateDropdown.value == "Bench") {
+    UpdateGoalToLoggedInAccountReUSedFunction("Bench");
+  } else if (UpdateDropdown.value == "Deadlift") {
+    UpdateGoalToLoggedInAccountReUSedFunction("Deadlift");
+  }
 }
 ///Graphs
-Chart.defaults.font.size = 13;
+Chart.defaults.font.size = 12;
 Chart.defaults.font.family = "monospace";
 Chart.defaults.color = "#000";
+Chart.defaults.plugins.tooltip.width = 29;
 const MainGrpah = new Chart(LineGraph, {
   type: "line",
   data: {
@@ -727,6 +1150,7 @@ const MainGrpah = new Chart(LineGraph, {
     ],
   },
   options: {
+    devicePixelRatio: 2,
     scales: {
       y: {
         beginAtZero: true,
@@ -742,14 +1166,14 @@ const DonghnutSqaut = new Chart(DonghnutGraph1, {
       {
         label: "online tutorial subjects",
         data: [180, 10],
-        backgroundColor: ["black", " lightgrey"],
+        backgroundColor: ["black", " white"],
         hoverOffset: 5,
       },
     ],
   },
   options: {
     responsive: false,
-    events: null,
+    devicePixelRatio: 2,
   },
 });
 const DonghnutBench = new Chart(DonghnutGraph2, {
@@ -758,15 +1182,16 @@ const DonghnutBench = new Chart(DonghnutGraph2, {
     labels: ["current max", "max goal"],
     datasets: [
       {
-        label: "online tutorial subjects",
+        label: "",
         data: [180, 3],
-        backgroundColor: ["black", "lightgrey"],
+        backgroundColor: ["black", "white"],
         hoverOffset: 5,
       },
     ],
   },
   options: {
     responsive: false,
+    devicePixelRatio: 2,
   },
 });
 const DonghnutDeadlift = new Chart(DonghnutGraph3, {
@@ -775,15 +1200,41 @@ const DonghnutDeadlift = new Chart(DonghnutGraph3, {
     labels: ["current max", "max goal"],
     datasets: [
       {
-        label: "online tutorial subjects",
         data: [120, 50],
-        backgroundColor: ["black", "lightgrey"],
+        backgroundColor: ["black", "white"],
         hoverOffset: 5,
       },
     ],
   },
   options: {
     responsive: false,
+    devicePixelRatio: 2,
+  },
+});
+const activitycongraph = new Chart(rankuppie, {
+  type: "doughnut",
+  data: {
+    datasets: [
+      {
+        label: "Bench",
+        data: [50, 40],
+        backgroundColor: ["black", "lightgrey"],
+        hoverOffset: 5,
+      },
+    ],
+  },
+  options: {
+    clip: false,
+    layout: {
+      padding: { bottom: 55 },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+
+    responsive: true,
   },
 });
 
@@ -794,9 +1245,8 @@ const init = function () {
   LogInFin.addEventListener("click", () => {
     LoggingIn();
     SortingLiftsByDateInLoggedInObject();
-    UpdateAllDashboardUI();
     MakeUpdateAccountPopUpIfEmpty();
-    UpdatingArrayOfAllAccountObjects();
+    UpdateAllDashboardUI();
   });
   AllDashBoardSelectorButtons.forEach((element) =>
     element.addEventListener("click", ChangingContainerContent)
@@ -824,8 +1274,22 @@ const init = function () {
   });
   NewAccountFinalSubmitButton.addEventListener("click", () => {
     NewAccountUpdatingAccount();
-    UpdateAllDashboardUI();
     UpdatingLoggedInAccountValuesToLocalStorage();
+    UpdateAllDashboardUI();
   });
+  [
+    CurrentGoalSquattext,
+    CurrentGoalBenchtext,
+    CurrentGoalsDeadlifttext,
+  ].forEach((h3) => h3.addEventListener("mouseenter", GoalCommentAppear));
+  [
+    CurrentGoalSquattext,
+    CurrentGoalBenchtext,
+    CurrentGoalsDeadlifttext,
+  ].forEach((h3) =>
+    h3.addEventListener("mouseleave", () => {
+      hideEl(GoalCommentDiv);
+    })
+  );
 };
 init();

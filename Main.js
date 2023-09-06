@@ -287,8 +287,6 @@ function LoggingIn() {
     if (PasswordInput1.value == LoggingInAccount.password) {
       loggedInAccountObject = LoggingInAccount;
       LoadingDashboard();
-
-      dashboardCon.style.display = "grid";
     } else {
       revealEl(ErrorSuccesCon);
       ChangeTextOfElement("WRONG PASSWORD", ErrorSucces);
@@ -816,11 +814,12 @@ function UpdateAllDashboardUI() {
 function GoalCommentAppear(event) {
   if (event.target.classList.contains("SqautGoal")) {
     if (CurrentGoalSquattext.textContent.includes("+")) {
-      document.getElementById("GoalCommentPopUp").style.left = `${
-        event.pageX + 405
-      }px`;
+      document.getElementById(
+        "GoalCommentPopUp"
+      ).style.left = `${event.pageX}px`;
+      console.log(CurrentGoalBenchtext.getBoundingClientRect());
       document.getElementById("GoalCommentPopUp").style.top = `${
-        event.pageY + 35
+        event.pageY - 100
       }px`;
       GoalCommentTextGoal.style.left = ChangeTextOfElement(
         `Goal: ${loggedInAccountObject.Squat.goal.weight} by ${loggedInAccountObject.Squat.goal.date}`,

@@ -7,6 +7,7 @@ body {
 #title {
   color: rgb(255, 255, 255);
   text-align: center;
+  margin-top: 20px;
   font-size: 60px;
   font-weight: 90;
 }
@@ -180,7 +181,8 @@ body {
   border-radius: 8px;
   background: #ffffff;
   padding: 10px;
-  backdrop-filter: blur(5px);
+  z-index: 8;
+  position: relative;
   font-size: 14;
 }
 #GoalCommentPopUp {
@@ -460,7 +462,8 @@ thead {
 }
 #LoginButtonFin:hover,
 #CreateAcoountFin:hover {
-  color: lightgreen;
+  color: black;
+  background-color: white;
 }
 #CreateAccountIN,
 #LogInIN {
@@ -470,12 +473,12 @@ thead {
 }
 #CreateAccountIN:hover,
 #LogInIN:hover {
-  color: lightgreen;
+  color: rgb(255, 255, 255);
   cursor: default;
 }
 #ErorrSuccessMessage {
   margin-top: 1px;
-  color: lightgreen;
+  color: rgb(255, 255, 255);
   font-size: 15px;
 }
 #settingsicon {
@@ -649,5 +652,5 @@ thead {
 }
 #NewAccountTitle {
   font-size: 20px;
-  margin-left: 170px;
+  text-align: center;
 }
